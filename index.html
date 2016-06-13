@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <script type="text/javascript" src= "howler.js"></script>
   <title>raining</title>
   <style>
   body {
@@ -61,12 +62,10 @@
 </head>
 <body>
   <canvas id="canvas"></canvas>
-  <audio id="1" src="rainfade_1.mp3" loop preload="auto"></audio>
-  <audio id="2" src="rainfade_1.mp3" loop preload="auto"></audio>
   <button class="toggle_play_pause play"></button>
   <script>
     document.addEventListener("DOMContentLoaded",function(){
-      var isPause = false;
+      var isPause = true;
       var canvas = document.getElementById('canvas');
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -128,9 +127,18 @@
 
       }
       var togglePlayPause = document.querySelector('.toggle_play_pause');
-      var v1 = document.getElementById("1")
-      var v2 = document.getElementById("2")
       var timeoutId;
+
+      var sound = new Howl({
+        urls: ['rainfade_1.mp3'],
+        loop: true,
+      });
+
+
+      var sound2 = new Howl({
+        urls: ['rainfade_1.mp3'],
+        loop: true,
+      });
 
       document.querySelector('body').addEventListener('click', function(event){
         var classList = event.target.classList;
@@ -150,9 +158,9 @@
         document.title = 'raining';
         isPause = false;
 
-        v1.play();
+        sound.play();
         timeoutId = setTimeout(function(){
-          v2.play();
+          sound2.play();
         },6000);
       }
 
@@ -160,39 +168,12 @@
         clearTimeout(timeoutId);
         document.title = 'peace';
         isPause = true;
-        v1.pause();
-        v2.pause();
-        v1.currentTime = 0;
-        v2.currentTime = 0;
+        sound.stop();
+        sound2.stop();
       }
 
-      // function increase(){
-      //   try{
-      //     v1.volume+=0.1;
-      //     v2.volume+=0.1;
-
-      //   }
-      //   catch(e) {
-
-      //   }
-      // }
-
-      // function decrease(){
-      //   try{
-      //     v1.volume-=0.1;
-      //     v2.volume-=0.1;
-
-      //   }
-      //   catch(e) {
-
-      //   }
-      // }
-
-      togglePlayPause.click();
 
     });
-
-
 
   </script>
 </body>
