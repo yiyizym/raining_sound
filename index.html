@@ -1,181 +1,276 @@
 <!DOCTYPE html>
 <html lang="en" manifest="cache.manifest">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <script type="text/javascript" src= "howler.js"></script>
-  <title>raining</title>
-  <style>
-  body {
-    margin: 0;
-    overflow: hidden;
-    background: #061928;
-  }
-  .toggle_play_pause {
-    position: fixed;
-    display: block;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-25%);
-    width: 30%;
-    height: 0;
-    padding-bottom: 30%;
-    border: none;
-    border-radius: 20px;
-    background-color: rgba(255,255,255,.2);
-    outline: none;
-    cursor: pointer;
-  }
-  .toggle_play_pause.pause::after {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    content: '';
-    display: block;
-    width: 50%;
-    height: 50%;
-    background: linear-gradient(90deg, rgba(0,0,0,.8) 25%, transparent 25%, 75%, rgba(0,0,0,.8) 75%);
-  }
-  .toggle_play_pause.play::after {
-    position: absolute;
-    top: 25%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    content: '';
-    display: block;
-    width: 50%;
-    height: 50%;
-    background: linear-gradient(25.56505deg,rgba(0,0,0,.8) 32.5%, transparent 32.5%);
-  }
-  .toggle_play_pause.play::before {
-    position: absolute;
-    top: 75%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    content: '';
-    display: block;
-    width: 50%;
-    height: 50%;
-    background: linear-gradient(-25.56505deg,transparent 67.5%,rgba(0,0,0,0.8) 67.5%);
-  }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+    <script type="text/javascript" src="howler.js"></script>
+    <title>raining</title>
+    <style>
+        *,
+        *:before,
+        *:after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            /*transition*/
+            -webkit-transition: .25s ease-in-out;
+            -moz-transition: .25s ease-in-out;
+            -o-transition: .25s ease-in-out;
+            transition: .25s ease-in-out;
+            outline: none;
+            font-family: Helvetica Neue, helvetica, arial, verdana, sans-serif;
+        }
+
+        #toggles {
+            position: fixed;
+            display: block;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -25%);
+            width: 60px;
+            text-align: center;
+        }
+
+        .ios-toggle,
+        .ios-toggle:active {
+            position: absolute;
+            top: -5000px;
+            height: 0;
+            width: 0;
+            opacity: 0;
+            border: none;
+            outline: none;
+        }
+
+        .checkbox-label {
+            display: block;
+            position: relative;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            line-height: 16px;
+            width: 100%;
+            height: 36px;
+            /*border-radius*/
+            -webkit-border-radius: 18px;
+            -moz-border-radius: 18px;
+            border-radius: 18px;
+            background: #f8f8f8;
+            cursor: pointer;
+        }
+
+        .checkbox-label:before {
+            content: '';
+            display: block;
+            position: absolute;
+            z-index: 1;
+            line-height: 34px;
+            text-indent: 40px;
+            height: 36px;
+            width: 36px;
+            /*border-radius*/
+            -webkit-border-radius: 100%;
+            -moz-border-radius: 100%;
+            border-radius: 100%;
+            top: 0px;
+            left: 0px;
+            right: auto;
+            background: white;
+            /*box-shadow*/
+            -webkit-box-shadow: 0 3px 3px rgba(0, 0, 0, .2), 0 0 0 2px #dddddd;
+            -moz-box-shadow: 0 3px 3px rgba(0, 0, 0, .2), 0 0 0 2px #dddddd;
+            box-shadow: 0 3px 3px rgba(0, 0, 0, .2), 0 0 0 2px #dddddd;
+        }
+
+        .checkbox-label:after {
+            content: attr(data-off);
+            display: block;
+            position: absolute;
+            z-index: 0;
+            top: 0;
+            left: -300px;
+            padding: 10px;
+            height: 100%;
+            width: 300px;
+            text-align: right;
+            color: #bfbfbf;
+            white-space: nowrap;
+        }
+
+        .ios-toggle:checked+.checkbox-label {
+            /*box-shadow*/
+            -webkit-box-shadow: inset 0 0 0 20px rgba(19, 191, 17, 1), 0 0 0 2px rgba(19, 191, 17, 1);
+            -moz-box-shadow: inset 0 0 0 20px rgba(19, 191, 17, 1), 0 0 0 2px rgba(19, 191, 17, 1);
+            box-shadow: inset 0 0 0 20px rgba(19, 191, 17, 1), 0 0 0 2px rgba(19, 191, 17, 1);
+        }
+
+        .ios-toggle:checked+.checkbox-label:before {
+            left: calc(100% - 36px);
+            /*box-shadow*/
+            -webkit-box-shadow: 0 0 0 2px transparent, 0 3px 3px rgba(0, 0, 0, .3);
+            -moz-box-shadow: 0 0 0 2px transparent, 0 3px 3px rgba(0, 0, 0, .3);
+            box-shadow: 0 0 0 2px transparent, 0 3px 3px rgba(0, 0, 0, .3);
+        }
+
+        .ios-toggle:checked+.checkbox-label:after {
+            content: attr(data-on);
+            left: 60px;
+            width: 36px;
+        }
+
+        /* GREEN CHECKBOX */
+
+        #show-animation+.checkbox-label,
+        #play-sound+.checkbox-label {
+            /*box-shadow*/
+            -webkit-box-shadow: inset 0 0 0 0px rgba(19, 191, 17, 1), 0 0 0 2px #dddddd;
+            -moz-box-shadow: inset 0 0 0 0px rgba(19, 191, 17, 1), 0 0 0 2px #dddddd;
+            box-shadow: inset 0 0 0 0px rgba(19, 191, 17, 1), 0 0 0 2px #dddddd;
+        }
+
+        #show-animation:checked+.checkbox-label,
+        #play-sound:checked+.checkbox-label {
+            /*box-shadow*/
+            -webkit-box-shadow: inset 0 0 0 18px rgba(19, 191, 17, 1), 0 0 0 2px rgba(19, 191, 17, 1);
+            -moz-box-shadow: inset 0 0 0 18px rgba(19, 191, 17, 1), 0 0 0 2px rgba(19, 191, 17, 1);
+            box-shadow: inset 0 0 0 18px rgba(19, 191, 17, 1), 0 0 0 2px rgba(19, 191, 17, 1);
+        }
+
+        #show-animation:checked+.checkbox-label:after,
+        #play-sound:checked+.checkbox-label:after {
+            color: rgba(19, 191, 17, 1);
+        }
+
+        body {
+            overflow: hidden;
+            background: #061928;
+        }
+    </style>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
-  <button class="toggle_play_pause play"></button>
-  <script>
-    document.addEventListener("DOMContentLoaded",function(){
-      var isPause = true;
-      var canvas = document.getElementById('canvas');
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    <canvas id="canvas"></canvas>
+    <div id="toggles">
+        <input type="checkbox" name="play-sound" id="play-sound" class="ios-toggle"/>
+        <label for="play-sound" class="checkbox-label" data-off="rainning sound stop" data-on="rainning sound playing"></label>
 
-      if(canvas.getContext) {
-        var ctx = canvas.getContext('2d');
-        var w = canvas.width;
-        var h = canvas.height;
-        ctx.strokeStyle = 'rgba(174,194,224,0.5)';
-        ctx.lineWidth = 1;
-        ctx.lineCap = 'round';
+        <input type="checkbox" name="show-animation" id="show-animation" class="ios-toggle"/>
+        <label for="show-animation" class="checkbox-label" data-off="rain drops hidden" data-on="rain drops shown"></label>
+
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var noAnimation = true;
+            var isPause = true;
+            var canvas = document.getElementById('canvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            if (canvas.getContext) {
+                var ctx = canvas.getContext('2d');
+                var w = canvas.width;
+                var h = canvas.height;
+                ctx.strokeStyle = 'rgba(174,194,224,0.5)';
+                ctx.lineWidth = 1;
+                ctx.lineCap = 'round';
 
 
-        var init = [];
-        var maxParts = 300;
-        for(var a = 0; a < maxParts; a++) {
-          init.push({
-            x: Math.random() * w,
-            y: Math.random() * h,
-            l: Math.random() * 1,
-            xs: -4 + Math.random() * 4 + 2,
-            ys: Math.random() * 10 + 10
-          })
-        }
+                var init = [];
+                var maxParts = 300;
+                for (var a = 0; a < maxParts; a++) {
+                    init.push({
+                        x: Math.random() * w,
+                        y: Math.random() * h,
+                        l: Math.random() * 1,
+                        xs: -4 + Math.random() * 4 + 2,
+                        ys: Math.random() * 10 + 10
+                    })
+                }
 
-        var particles = [];
-        for(var b = 0; b < maxParts; b++) {
-          particles[b] = init[b];
-        }
+                var particles = [];
+                for (var b = 0; b < maxParts; b++) {
+                    particles[b] = init[b];
+                }
 
-        function draw() {
-          if (isPause) {
-            return;
-          }
-          ctx.clearRect(0, 0, w, h);
-          for(var c = 0; c < particles.length; c++) {
-            var p = particles[c];
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p.x + p.l * p.xs, p.y + p.l * p.ys);
-            ctx.stroke();
-          }
-          move();
-        }
+                function draw() {
+                    if(noAnimation){
+                        ctx.clearRect(0, 0, w, h);
+                        return;
+                    }
+                    if (isPause) {
+                        return;
+                    }
+                    ctx.clearRect(0, 0, w, h);
+                    for (var c = 0; c < particles.length; c++) {
+                        var p = particles[c];
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p.x + p.l * p.xs, p.y + p.l * p.ys);
+                        ctx.stroke();
+                    }
+                    move();
+                }
 
-        function move() {
-          for(var b = 0; b < particles.length; b++) {
-            var p = particles[b];
-            p.x += p.xs;
-            p.y += p.ys;
-            if(p.x > w || p.y > h) {
-              p.x = Math.random() * w;
-              p.y = -20;
+                function move() {
+                    for (var b = 0; b < particles.length; b++) {
+                        var p = particles[b];
+                        p.x += p.xs;
+                        p.y += p.ys;
+                        if (p.x > w || p.y > h) {
+                            p.x = Math.random() * w;
+                            p.y = -20;
+                        }
+                    }
+                }
+
+                setInterval(draw, 30);
+
             }
-          }
-        }
+            var togglePlayPause = document.querySelector('.toggle_play_pause');
+            var timeoutId;
 
-        setInterval(draw, 30);
-
-      }
-      var togglePlayPause = document.querySelector('.toggle_play_pause');
-      var timeoutId;
-
-      var sound = new Howl({
-        urls: ['rainfade_1.mp3'],
-        loop: true,
-      });
+            var sound = new Howl({
+                urls: ['rainfade_1.mp3'],
+                loop: true,
+            });
 
 
-      var sound2 = new Howl({
-        urls: ['rainfade_1.mp3'],
-        loop: true,
-      });
+            var sound2 = new Howl({
+                urls: ['rainfade_1.mp3'],
+                loop: true,
+            });
 
-      document.querySelector('body').addEventListener('click', function(event){
-        var classList = event.target.classList;
-        if (classList.contains('pause')) {
-          classList.remove('pause');
-          classList.add('play');
-          pause();
-        } else if(classList.contains('play')) {
-          classList.remove('play');
-          classList.add('pause');
-          play();
-        }
-      });
+            document.querySelector('#play-sound').addEventListener('change', function(){
+                this.checked ? play() : pause();
+            });
 
-      function play(){
+            
+            function play() {
 
-        document.title = 'raining';
-        isPause = false;
+                document.title = 'raining';
+                isPause = false;
 
-        sound.play();
-        timeoutId = setTimeout(function(){
-          sound2.play();
-        },6000);
-      }
+                sound.play();
+                timeoutId = setTimeout(function () {
+                    sound2.play();
+                }, 6000);
+            }
 
-      function pause(){
-        clearTimeout(timeoutId);
-        document.title = 'peace';
-        isPause = true;
-        sound.stop();
-        sound2.stop();
-      }
+            function pause() {
+                clearTimeout(timeoutId);
+                document.title = 'peace';
+                isPause = true;
+                sound.stop();
+                sound2.stop();
+            }
 
+            document.querySelector('#show-animation').addEventListener('change', function () {
+                noAnimation = !this.checked;
+            });
 
-    });
+        });
 
-  </script>
+    </script>
 </body>
+
 </html>
