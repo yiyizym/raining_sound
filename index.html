@@ -162,6 +162,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             var noAnimation = true;
             var isPause = true;
+            var s1, s2;
             var canvas = document.getElementById('canvas');
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -232,15 +233,10 @@
             var sound = new Howl({
                 src: ['rainfade_1.mp3'],
                 html5: true,
+                preload: true,
                 loop: true,
             });
 
-
-            var sound2 = new Howl({
-                src: ['rainfade_1.mp3'],
-                html5: true,
-                loop: true,
-            });
 
             document.querySelector('#play-sound').addEventListener('change', function(){
                 this.checked ? play() : pause();
@@ -252,9 +248,11 @@
                 document.title = 'raining';
                 isPause = false;
 
-                sound.play();
+                s1 = sound.play();
+                s2 = sound.play();
+                sound.pause(s2);
                 timeoutId = setTimeout(function () {
-                    sound2.play();
+                    sound.play(s2);
                 }, 6000);
             }
 
@@ -262,8 +260,8 @@
                 clearTimeout(timeoutId);
                 document.title = 'peace';
                 isPause = true;
-                sound.stop();
-                sound2.stop();
+                sound.stop(s1);
+                sound.stop(s2);
             }
 
             document.querySelector('#show-animation').addEventListener('change', function () {
