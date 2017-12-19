@@ -230,13 +230,15 @@
             var timeoutId;
 
             var sound = new Howl({
-                urls: ['rainfade_1.mp3'],
+                src: ['rainfade_1.mp3'],
+                html5: true,
                 loop: true,
             });
 
 
             var sound2 = new Howl({
-                urls: ['rainfade_1.mp3'],
+                src: ['rainfade_1.mp3'],
+                html5: true,
                 loop: true,
             });
 
@@ -244,7 +246,7 @@
                 this.checked ? play() : pause();
             });
 
-            
+
             function play() {
 
                 document.title = 'raining';
