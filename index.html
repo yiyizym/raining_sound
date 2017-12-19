@@ -227,7 +227,6 @@
                 setInterval(draw, 30);
 
             }
-            var togglePlayPause = document.querySelector('.toggle_play_pause');
             var timeoutId;
 
             var sound = new Howl({
@@ -244,24 +243,29 @@
 
 
             function play() {
+                console.log('play!')
 
                 document.title = 'raining';
                 isPause = false;
 
                 s1 = sound.play();
                 s2 = sound.play();
-                sound.pause(s2);
+                // console.log('s1 is playing: ', sound.playing(s1));
                 timeoutId = setTimeout(function () {
+                    sound.stop(s2);
                     sound.play(s2);
                 }, 6000);
             }
 
             function pause() {
+                console.log('stop!')
                 clearTimeout(timeoutId);
                 document.title = 'peace';
                 isPause = true;
-                sound.stop(s1);
-                sound.stop(s2);
+                sound.stop();
+
+                // console.log('s1 is playing: ', sound.playing(s1))
+                // console.log('s2 is playing: ', sound.playing(s2))
             }
 
             document.querySelector('#show-animation').addEventListener('change', function () {
